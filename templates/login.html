@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - FRAMS{% endblock %}
+
+{% block content %}
+<div class="hero fade-in">
+    <h1>Administrator Login</h1>
+    <p>Secure access to management dashboard and settings.</p>
+</div>
+
+<div class="form-container glass fade-in" style="animation-delay: 0.1s;">
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Username</label>
+            <div class="input-with-icon">
+                <i class="fas fa-user-circle"></i>
+                <input type="text" name="username" class="form-input" required placeholder="admin" autofocus>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" class="form-input" required placeholder="••••••••">
+            </div>
+        </div>
+        <button type="submit" class="btn-submit">Login to Dashboard</button>
+    </form>
+    <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="{% url 'password_reset' %}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">
+            Forgot Password?
+        </a>
+    </div>
+
+
+
+</div>
+{% endblock %}

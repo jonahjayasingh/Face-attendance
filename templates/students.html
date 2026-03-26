@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Students - FRAMS{% endblock %}
+
+{% block content %}
+<div class="hero fade-in">
+    <h1>Student Database</h1>
+    <p>Manage enrolled students and their recognition profiles.</p>
+</div>
+
+<div class="glass fade-in" style="padding: 2.5rem; animation-delay: 0.1s;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+        <div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Enrolled Students</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">{{ students.count }} student(s) registered in
+                the system</p>
+        </div>
+        <a href="{% url 'register_student' %}" class="btn-submit"
+            style="width:250px; margin-top: 0; padding: 0.75rem 1.75rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-user-plus"></i>
+            Add New Student
+        </a>
+    </div>
+
+    {% if students %}
+    <!-- Card Grid View -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for student in students %}
+        <div class="glass" style="padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+            <!-- Gradient accent bar -->
+            <div
+                style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary));">
+            </div>
+
+            <!-- Student Avatar -->
+            <div
+                style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--border-color);">
+                {% if student.image %}
+                <img src="{{ student.image.url }}" alt="{{ student.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                <i class="fas fa-user" style="font-size: 2rem; color: var(--primary);"></i>
+                {% endif %}
+            </div>
+
+            <!-- Student Info -->
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">{{ student.name }}</h4>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    <i class="fas fa-graduation-cap" style="margin-right:0.25rem;"></i> {{ student.dept|default:"No Department" }}
+                </div>
+                <div style="font-size: 0.85rem; color: var(--primary); font-weight: 500; margin-bottom: 1rem;">
+                    <i class="fas fa-user-tie" style="margin-right:0.25rem;"></i> Staff: {{ student.staff.name|default:"Unassigned" }}
+                </div>
+                <div
+                    style="display: inline-block; background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <i class="fas fa-id-badge" style="margin-right: 0.25rem;"></i>
+                    #{{ student.registration_id }}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <a href="{% url 'edit_student_form' student.registration_id %}"
+                    style="padding: 0.65rem; border-radius: 10px; text-decoration: none; text-align: center; font-weight: 500; font-size: 0.9rem; transition: all 0.3s; background: var(--bg-elevated); border: 1px solid var(--border-color); color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </a>
+                <a href="{% url 'delete_student' student.registration_id %}"
+                    onclick="return confirm('Are you sure you want to delete {{ student.name }}? This action cannot be undone.')"
+                    style="padding: 0.65rem; border-radius: 10px; text-decoration: none; text-align: center; font-weight: 500; font-size: 0.9rem; transition: all 0.3s; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div style="text-align: center; padding: 5rem 2rem;">
+        <div
+            style="width: 120px; height: 120px; margin: 0 auto 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--border-color);">
+            <i class="fas fa-users" style="font-size: 3rem; color: var(--primary);"></i>
+        </div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">No Students Enrolled Yet</h3>
+        <p
+            style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+            Get started by adding your first student to the face recognition system.
+        </p>
+        <a href="{% url 'register_student' %}" class="btn-submit"
+            style="width: auto; padding: 0.75rem 2rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-user-plus"></i>
+            Add Your First Student
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .glass:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15);
+    }
+
+    .glass a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}

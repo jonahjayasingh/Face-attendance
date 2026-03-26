@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Faculty - FRAMS{% endblock %}
+
+{% block content %}
+<div class="hero fade-in">
+    <h1>Faculty Management</h1>
+    <p>View and manage registered staff members.</p>
+</div>
+
+<div class="glass fade-in" style="padding: 2.5rem; animation-delay: 0.1s;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+        <div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Registered Faculty</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">{{ faculties.count }} faculty member(s) in system</p>
+        </div>
+        <a href="{% url 'register_staff' %}" class="btn-submit"
+            style="width:250px; margin-top: 0; padding: 0.75rem 1.75rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-plus"></i>
+            Add New Faculty
+        </a>
+    </div>
+
+    {% if faculties %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for faculty in faculties %}
+        <div class="glass" style="padding: 2rem; position: relative;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary);"></div>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="width: 50px; height: 50px; background: rgba(99, 102, 241, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    {% if faculty.image %}
+                    <img src="{{faculty.image.url}}" alt="{{faculty.name}}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                    <i class="fas fa-user" style="font-size: 1.5rem;"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: var(--text-primary);">{{ faculty.name }}</h4>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">{{faculty.department }}</div>
+                </div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> {{ faculty.email }}
+                </div>
+                <div style="font-size: 0.9rem; color: var(--primary); margin-top: 0.5rem; font-weight: 600;">
+                    <i class="fas fa-users" style="margin-right: 0.5rem;"></i> {{ faculty.get_student_count }} Students Assigned
+                </div>
+            </div>
+            <a href="{% url 'delete_faculty' faculty.id %}" 
+               onclick="return confirm('Are you sure? This will remove the faculty member.')"
+               style="display: block; width: 100%; text-align: center; padding: 0.75rem; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: var(--danger); text-decoration: none; font-size: 0.9rem; font-weight: 500; border: 1px solid rgba(239, 68, 68, 0.2);">
+                <i class="fas fa-trash-alt" style="margin-right: 0.5rem;"></i> Delete
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem;">
+        <i class="fas fa-users-slash" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block;"></i>
+        <h3 style="color: var(--text-primary);">No Faculty Members Found</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Home - FRAMS{% endblock %}
+
+{% block content %}
+<div class="hero fade-in">
+    <h1>Smart Attendance Management</h1>
+    <p>Efficiently track attendance using state-of-the-art face recognition technology. Secure, fast, and automated.</p>
+</div>
+
+<div class="card-grid fade-in" style="animation-delay: 0.1s;">
+    <a href="{% url 'register_student' %}" class="action-card glass">
+        <div class="icon-wrapper">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <h3>Enroll Student</h3>
+        <p>Capture student details and face data for the recognition system.</p>
+    </a>
+
+    <a href="{% url 'start_recognition' %}" class="action-card glass">
+        <div class="icon-wrapper">
+            <i class="fas fa-camera"></i>
+        </div>
+        <h3>Mark Attendance</h3>
+        <p>Launch the recognition module to verify and log attendance automatically.</p>
+    </a>
+
+    <a href="{% url 'data' %}" class="action-card glass">
+        <div class="icon-wrapper">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <h3>Daily Report</h3>
+        <p>View attendance logs for today and verify the sessions.</p>
+    </a>
+</div>
+{% endblock %}

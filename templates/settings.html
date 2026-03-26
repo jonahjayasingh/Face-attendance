@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings - FRAMS{% endblock %}
+
+{% block content %}
+<div class="hero fade-in">
+    <h1>System Configuration</h1>
+    <p>Manage attendance start times and arrival thresholds.</p>
+</div>
+
+<div class="form-container glass fade-in" style="animation-delay: 0.1s; max-width: 600px;">
+    <h3 style="font-size: 1.25rem; margin-bottom: 2rem; color: var(--text-primary); border-bottom: 2px solid var(--border-color); padding-bottom: 1rem;">
+        <i class="fas fa-clock" style="color: var(--primary); margin-right: 0.75rem;"></i>
+        Attendance Rule Settings
+    </h3>
+    
+    <form action="{% url 'system_settings' %}" method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label style="font-weight: 600; color: var(--text-primary);">Session Start Time</label>
+            <div class="input-with-icon">
+                <i class="fas fa-play-circle" style="color: var(--success);"></i>
+                <input type="time" name="start_time" class="form-input" required 
+                       value="{{ settings.start_time|time:'H:i' }}">
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Official start time of the session (e.g., 09:00 AM)
+            </p>
+        </div>
+        
+        <div class="form-group">
+            <label style="font-weight: 600; color: var(--text-primary);">Grace Period (Threshold Minutes)</label>
+            <div class="input-with-icon">
+                <i class="fas fa-stopwatch" style="color: var(--warning);"></i>
+                <input type="number" name="threshold" class="form-input" required min="0" max="60"
+                       value="{{ settings.absent_threshold_minutes }}">
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Number of minutes allowed after start time before being marked as <strong>Absent</strong>.
+            </p>
+        </div>
+        
+        <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <h4 style="font-size: 0.95rem; color: var(--success); margin-bottom: 0.5rem;">Current Rule:</h4>
+            <div style="font-size: 1rem; color: var(--text-primary); font-weight: 600;">
+                Students arriving after {{ settings.start_time|time:"I:M %p" }} + {{ settings.absent_threshold_minutes }}m 
+                ({{ start_plus|default:settings.start_time }} approx) will be marked as <strong>Absent</strong>.
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit" style="background: var(--primary);">Update Configuration</button>
+        <a href="{% url 'dashboard' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--text-secondary); text-decoration: none;">Back to Dashboard</a>
+    </form>
+</div>
+{% endblock %}
